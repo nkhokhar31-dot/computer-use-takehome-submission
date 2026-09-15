@@ -1,0 +1,9 @@
+{"ts":"2026-09-15T22:24:36.839Z","event":"action","turn":1,"kind":"fill","intentCode":"ENTER_PARAMETER","strategyKind":"label"}
+{"ts":"2026-09-15T22:24:38.587Z","event":"action","turn":2,"kind":"click","intentCode":"ACTIVATE_CONTROL","strategyKind":"role"}
+{"ts":"2026-09-15T22:24:40.235Z","event":"action","turn":3,"kind":"click","intentCode":"ACTIVATE_CONTROL","strategyKind":"role"}
+{"ts":"2026-09-15T22:24:42.012Z","event":"action","turn":4,"kind":"click","intentCode":"ACTIVATE_CONTROL","strategyKind":"role"}
+{"ts":"2026-09-15T22:24:43.606Z","event":"action","turn":5,"kind":"extract","intentCode":"EXTRACT_VALUE","strategyKind":"nearbyText"}
+{"ts":"2026-09-15T22:24:45.720Z","event":"action","turn":6,"kind":"extract","intentCode":"EXTRACT_VALUE","strategyKind":"nearbyText"}
+{"ts":"2026-09-15T22:24:47.452Z","event":"action","turn":7,"kind":"extract","intentCode":"EXTRACT_VALUE","strategyKind":"nearbyText"}
+{"ts":"2026-09-15T22:24:48.937Z","event":"action","turn":8,"kind":"done","intentCode":"GOAL_COMPLETE","verifiedLocally":true}
+{"ts":"2026-09-15T22:24:48.938Z","event":"discovery_result","outcome":"success","outputKeys":["currency","balance","status"]}

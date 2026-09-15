@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.env
+evidence/tmp/
+.DS_Store
+
+capabilities/generated/

@@ -1,0 +1,135 @@
+{
+  "about": "Hand-written index of the evidence in this directory. Every file listed under `runs` is a real run recorded by src/evidence.ts; nothing here was synthesised, and no run's contents were edited after the fact. This set was recorded in one session against the code as submitted (including the fixes described in REPORT.md), replacing an earlier evidence set recorded against a pre-fix version of the code.",
+  "capability": "capabilities/member.balance.read.v1.json (id member.balance.read, version 1.2.0) for every run below except one: runs/replay-2026-09-15T23-43-17-296Z-96016f72.jsonl replays the uncurated, git-ignored capabilities/generated/member.balance.read.v1.1.0.discover-2026-09-15T22-24-34-249Z-1699a953.json instead - see that entry's notes.",
+  "filenameConvention": "The capability filename pins the MAJOR version (v1); the file's own `version` field carries the full semver, currently 1.2.0. Replay evidence records the exact `version` it ran against.",
+  "limitations": [
+    "A member id is a declared-sensitive input, so evidence files redact it. Which member a given replay run used is therefore not recoverable from the file itself; where this manifest names a member, it is inferred from run order/timestamps against the exact commands below, and is labelled as such.",
+    "Evidence events do not record the target app's mode (`semantic` / `legacy`) or the profile id. The legacy-mode demonstration is evidenced by tests/legacy-mode.test.ts, which asserts the rank-1 strategy returns zero matches and the rank-2 fallback resolves, not by a run file here.",
+    "A malformed --input file is rejected before any evidence writer is created (see replay.ts's validateInputs, called before createEvidenceWriter), so that scenario produces no run file either; it is demonstrated live in README.md's Commands section and is not unit-tested directly.",
+    "Screenshots are captured only on escalation paths (a hard-failure blocker or an intervention), never on a clean run.",
+    "Two replay intervention runs resolve the same session-expiry blocker two different ways: runs/replay-2026-09-15T22-25-46-471Z-94a476b7.jsonl used a short scripted operator (a Node script calling replay() directly, with an operatorPrompt that clicks 'Sign in again' via Playwright against the same live page object, then returns 'resume' - no person watched or typed anything). runs/replay-2026-09-15T22-26-25-753Z-7943b427.jsonl was operated by a real person: the author started the run, watched a headed Chromium window open, personally clicked 'Sign in again', and confirmed back for 'resume' to be sent - an evidence file cannot itself prove who clicked, so this is asserted by the author, not derivable from the JSONL alone."
+  ],
+  "runs": [
+    {
+      "file": "runs/discover-2026-09-15T22-24-34-249Z-1699a953.jsonl",
+      "kind": "discovery",
+      "scenario": "LLM-driven discovery against the live semantic app: the model reached the goal and the trace was compiled into the shipped capability.",
+      "command": "npm run discover -- --profile demo --goal \"Look up the requested member and read their savings account's balance, currency, and status\" --input fixtures/inputs/member-a.json",
+      "result": "success in 8 turns; outputs currency, balance, status",
+      "capabilityVersion": "produced the artifact now shipped as 1.2.0; cited by that file's discoveryProvenance.runId",
+      "verification": "live - real Anthropic call (claude-sonnet-5), real headed Chromium, run by the author",
+      "screenshots": [],
+      "notes": "This is the run the assignment's 'the discovery run has to be real' requirement rests on. Actions are recorded as closed-vocabulary intentCodes plus the resolved locator strategy kind - no model free text. The resulting targets/steps were diffed against the curated 1.2.0 artifact before this run's id replaced the previous discoveryProvenance.runId: identical strategies and step shapes, confirming no drift from the previous discovery run this replaced."
+    },
+    {
+      "file": "runs/replay-2026-09-15T23-43-17-296Z-96016f72.jsonl",
+      "kind": "replay",
+      "scenario": "The exact artifact the discovery run above wrote - capabilities/generated/member.balance.read.v1.1.0.discover-2026-09-15T22-24-34-249Z-1699a953.json - never curated, never hand-edited, replayed with a member other than the one discovery used.",
+      "command": "npm run replay -- --profile demo --capability capabilities/generated/member.balance.read.v1.1.0.discover-2026-09-15T22-24-34-249Z-1699a953.json --input fixtures/inputs/member-b.json",
+      "result": "success; all 8 steps, all 3 outputs extracted",
+      "capabilityVersion": "1.1.0 (the raw compile()+authorSafetyRules() output; not the curated 1.2.0 file used by every other replay run in this manifest)",
+      "verification": "live, zero model calls; sha256 of the capability file recorded immediately before and after this run and confirmed byte-identical (04126af8d82cc56aadf163d77e34d14760f218c003b6da55927f39328ecf0cbf), proving replay never mutates the artifact it reads",
+      "screenshots": [],
+      "notes": "Discovery (the run above) used member 00123; this run uses member 00456 and correctly returns that member's own data - the artifact discovery wrote, completely untouched by a human, generalizes to a different input with zero model calls. This is the literal 'discovery produces an artifact; that exact artifact replays deterministically' demonstration the assignment asks for, as distinct from every other replay in this manifest, which runs against the curated 1.2.0 file (compile()+authorSafetyRules() plus one hand-added legacy-mode fallback strategy on target1 - see REPORT.md section 2). capabilities/generated/ is git-ignored, so this run file is the only place in the repository that shows the raw generated artifact was ever actually exercised."
+    },
+    {
+      "file": "runs/replay-2026-09-15T22-24-05-281Z-d12ff13e.jsonl",
+      "kind": "replay",
+      "scenario": "Deterministic replay of the shipped artifact, first member.",
+      "command": "npm run replay -- --profile demo --capability capabilities/member.balance.read.v1.json --input fixtures/inputs/member-a.json",
+      "result": "success; all 8 steps, all 3 outputs extracted",
+      "capabilityVersion": "1.2.0",
+      "verification": "live, zero model calls",
+      "screenshots": [],
+      "notes": "Member confirmed as fixtures/inputs/member-a.json from the exact command run, in this order. The extracted balance is a declared-sensitive output, so it is not printed here either - see tests/replay-integration.test.ts for the value assertion."
+    },
+    {
+      "file": "runs/replay-2026-09-15T22-24-08-221Z-15ddd7f8.jsonl",
+      "kind": "replay",
+      "scenario": "Changed-input replay: the same artifact, a different member, no re-recording and no model.",
+      "command": "npm run replay -- --profile demo --capability capabilities/member.balance.read.v1.json --input fixtures/inputs/member-b.json",
+      "result": "success; all 8 steps, all 3 outputs extracted",
+      "capabilityVersion": "1.2.0",
+      "verification": "live, zero model calls",
+      "screenshots": [],
+      "notes": "Run immediately after the member-a run above with the same artifact and no changes to it. The differing output values are asserted directly in tests/replay-integration.test.ts, since the values themselves are redacted here."
+    },
+    {
+      "file": "runs/replay-2026-09-15T22-24-10-259Z-b7427be8.jsonl",
+      "kind": "replay",
+      "scenario": "Expected business outcome: a member id that does not exist.",
+      "command": "npm run replay -- --profile demo --capability capabilities/member.balance.read.v1.json --input fixtures/inputs/member-missing.json",
+      "result": "business_outcome MEMBER_NOT_FOUND at step-4-click - a declared result, not a failure",
+      "capabilityVersion": "1.2.0",
+      "verification": "live, zero model calls",
+      "screenshots": [],
+      "notes": "The step's target resolves to zero matches and the step declares zeroMatchOutcome, which is what makes this a business outcome rather than TARGET_NOT_FOUND."
+    },
+    {
+      "file": "runs/replay-2026-09-15T22-24-11-784Z-9800f82c.jsonl",
+      "kind": "replay",
+      "scenario": "Recoverable condition: the savings route serves a transient loading interstitial before real content.",
+      "command": "npm run replay -- --profile demo --capability capabilities/member.balance.read.v1.json --input fixtures/inputs/member-recovery.json",
+      "result": "success after 2 declared, bounded recovery attempts (recovery_attempt x2, then recovery_succeeded) within the declared bound of 3",
+      "capabilityVersion": "1.2.0",
+      "verification": "live, zero model calls",
+      "screenshots": [],
+      "notes": "This fixture's fault state (a per-process retry counter in target-app/server.ts) only produces the interstitial on member 00600's first two requests in a given target-app process lifetime, so this scenario was run exactly once against a freshly started app. The exhaustion counterpart (a tightened bound reporting a clean POSTCONDITION_FAILED) is covered by tests/replay-integration.test.ts, not by a run file."
+    },
+    {
+      "file": "runs/replay-2026-09-15T22-24-15-508Z-f3db2ee6.jsonl",
+      "kind": "replay",
+      "scenario": "Hard failure: the savings page renders an application-error banner matching a declared blocker.",
+      "command": "npm run replay -- --profile demo --capability capabilities/member.balance.read.v1.json --input fixtures/inputs/member-hardfail.json",
+      "result": "failure APPLICATION_ERROR at step-5-click, effect confirmed; stops rather than proceeding or retrying",
+      "capabilityVersion": "1.2.0",
+      "verification": "live, zero model calls; the masked screenshot was inspected visually",
+      "screenshots": ["escalation/replay-2026-09-15T22-24-15-508Z-f3db2ee6-step-5-click.masked.png"],
+      "notes": "The richer-signal-on-failure evidence required by 3.5. In the image the member id in the subtitle and the balance value are both masked; the non-sensitive Currency and Status values are left readable. This run also exercises the fix in REPORT.md's error-handling section: the JSONL now ends with a step_result event immediately after the blocker event, not on the blocker event alone."
+    },
+    {
+      "file": "runs/replay-2026-09-15T22-24-25-571Z-d4263058.jsonl",
+      "kind": "replay",
+      "scenario": "Escalation declined: a session-expiry blocker pauses the run, and the operator aborts instead of fixing and resuming.",
+      "command": "printf \"abort\\n\" | npm run replay -- --profile demo --capability capabilities/member.balance.read.v1.json --input fixtures/inputs/member-expired.json",
+      "result": "intervention_required (SESSION_EXPIRED) at step-4-click, epoch 1 -> aborted at the same intervention, one prompt",
+      "capabilityVersion": "1.2.0",
+      "verification": "live; \"abort\" was piped to stdin non-interactively rather than typed by a person, since declining requires no browser interaction to demonstrate",
+      "screenshots": ["escalation/replay-2026-09-15T22-24-25-571Z-d4263058-step-4-click.masked.png"],
+      "notes": "Shows the run ending cleanly under operator control rather than proceeding. Run before either successful-intervention run below, so that declining here does not reauthenticate member 00500 for the later scenarios (the fixture's session-expiry state is a per-process Set in target-app/server.ts that only clears on restart)."
+    },
+    {
+      "file": "runs/discover-2026-09-15T22-25-27-417Z-edd53374.jsonl",
+      "kind": "discovery",
+      "scenario": "Discovery's own stuck escalation: a goal that cannot be completed (the target control does not exist), the model proposes 'stuck', discovery pauses and hands control to a human, and the operator declines.",
+      "command": "printf \"abort\\n\" | npm run discover -- --profile demo --goal \"Click the button labeled 'This Button Does Not Exist Anywhere' then call done.\" --input fixtures/inputs/empty.json",
+      "result": "intervention_required (AGENT_STUCK) at turn 1 -> aborted, with a terminal event",
+      "capabilityVersion": "n/a (discovery, not a replay of a capability)",
+      "verification": "live - real Anthropic call (claude-sonnet-5), real headed Chromium; \"abort\" was piped to stdin non-interactively",
+      "screenshots": ["escalation/discover-2026-09-15T22-25-27-417Z-edd53374-discovery-turn-1.masked.png"],
+      "notes": "The model correctly proposed 'stuck' on its first turn rather than retrying, so this run has a single intervention rather than the dead-end-then-stuck sequence an earlier run of this same scenario showed. Unlike that earlier run, this one ends with a proper terminal 'aborted' event rather than stopping mid-prompt, so it is offered here as a full example rather than excluded as incomplete."
+    },
+    {
+      "file": "runs/replay-2026-09-15T22-25-46-471Z-94a476b7.jsonl",
+      "kind": "replay",
+      "scenario": "Escalation and handoff (scripted operator): a session-expiry blocker pauses the run, control transfers to a human on the same live session, a scripted operatorPrompt clicks 'Sign in again' against the live page, and the run resumes and completes.",
+      "command": "a standalone script calling replay() directly with the curated capability, memberId 00500, and an operatorPrompt that performs the fix via Playwright before returning 'resume' - not run through the npm CLI, since the real CLI always reads a live human from stdin",
+      "result": "intervention_required (SESSION_EXPIRED) at step-4-click, epoch 1 -> handback at epoch 2 -> success; all 3 outputs extracted",
+      "capabilityVersion": "1.2.0",
+      "verification": "live pause, payload, ownership transfer, resume validation and completion; the operator's browser fix and 'resume' were scripted against the same live page object, not performed by a person",
+      "screenshots": ["escalation/replay-2026-09-15T22-25-46-471Z-94a476b7-step-4-click.masked.png"],
+      "notes": "The intervention payload carries the full 3.6 context: capability and version, goal, stepId and intent, reasonCode, lastVerifiedCheckpoint, a redacted current screen, the masked screenshot ref, sessionId and controlEpoch. After a verified resume the interrupted step is not re-dispatched - see REPORT.md section 5."
+    },
+    {
+      "file": "runs/replay-2026-09-15T22-26-25-753Z-7943b427.jsonl",
+      "kind": "replay",
+      "scenario": "Person-driven escalation and handoff: a session-expiry blocker pauses the run, a person operates the same live browser to sign in again and confirms, and the run verifies its checkpoint and completes.",
+      "command": "npm run replay -- --profile demo --capability capabilities/member.balance.read.v1.json --input fixtures/inputs/member-expired.json, run against a target-app instance restarted immediately beforehand so member 00500 starts un-reauthenticated",
+      "result": "intervention_required (SESSION_EXPIRED) at step-4-click, epoch 1 -> 4 human_action events at epoch 1 -> handback at epoch 2 (humanActionCount 4, policyBlockedCount 0) -> success; all 3 outputs extracted",
+      "capabilityVersion": "1.2.0",
+      "verification": "live, zero model calls; the author personally clicked 'Sign in again' in the headed Chromium window this run opened and confirmed before 'resume' was sent to the process's stdin; the masked screenshot was inspected visually",
+      "screenshots": ["escalation/replay-2026-09-15T22-26-25-753Z-7943b427-step-4-click.masked.png"],
+      "notes": "human_action events carry only event kind, element kind and matched route pattern - no text, values or URLs (seq 1: click, seq 2: click on the 'Sign in again' link, seq 3: navigation matching the member-detail route, seq 4: one further stray click before confirming - all consistent with a person actually operating the page, not a script). This is the same session-expiry scenario as the scripted run above, resolved by an actual person instead, to show both a real and a scripted handoff exist side by side."
+    }
+  ]
+}

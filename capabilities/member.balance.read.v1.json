@@ -1,0 +1,244 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "member.balance.read",
+  "version": "1.2.0",
+  "profileId": "demo",
+  "goal": "Look up the requested member and read their savings account's balance, currency, and status",
+  "inputs": {
+    "memberId": {
+      "type": "string",
+      "sensitivity": "sensitive",
+      "description": "The member identifier to search for."
+    }
+  },
+  "outputs": {
+    "currency": {
+      "type": "string",
+      "sensitivity": "public",
+      "description": "Extracted \"currency\" value"
+    },
+    "balance": {
+      "type": "string",
+      "sensitivity": "sensitive",
+      "description": "Extracted \"balance\" value"
+    },
+    "status": {
+      "type": "string",
+      "sensitivity": "public",
+      "description": "Extracted \"status\" value"
+    }
+  },
+  "targets": {
+    "target1": {
+      "strategies": [
+        {
+          "kind": "label",
+          "text": "Member ID"
+        },
+        {
+          "kind": "nearbyText",
+          "labelText": "Member ID"
+        }
+      ],
+      "provenance": "authored"
+    },
+    "target2": {
+      "strategies": [
+        {
+          "kind": "role",
+          "role": "button",
+          "name": "Search"
+        }
+      ],
+      "provenance": "observed"
+    },
+    "target3": {
+      "strategies": [
+        {
+          "kind": "role",
+          "role": "link"
+        }
+      ],
+      "provenance": "authored"
+    },
+    "target4": {
+      "strategies": [
+        {
+          "kind": "roleContains",
+          "role": "link",
+          "contains": "Savings"
+        }
+      ],
+      "provenance": "authored"
+    },
+    "target5": {
+      "strategies": [
+        {
+          "kind": "nearbyText",
+          "labelText": "Currency"
+        }
+      ],
+      "provenance": "observed"
+    },
+    "target6": {
+      "strategies": [
+        {
+          "kind": "nearbyText",
+          "labelText": "Balance"
+        }
+      ],
+      "provenance": "observed"
+    },
+    "target7": {
+      "strategies": [
+        {
+          "kind": "nearbyText",
+          "labelText": "Status"
+        }
+      ],
+      "provenance": "observed"
+    }
+  },
+  "conditions": {
+    "memberInputMatchesRequest": {
+      "kind": "fieldValueEquals",
+      "targetRef": "target1",
+      "value": {
+        "inputRef": "memberId"
+      }
+    },
+    "memberDetailMatchesRequest": {
+      "kind": "pageContainsText",
+      "text": {
+        "inputRef": "memberId"
+      }
+    },
+    "savingsContentLoaded": {
+      "kind": "pageContainsText",
+      "text": {
+        "literal": "Balance"
+      }
+    },
+    "sessionExpiredSignature": {
+      "kind": "pageContainsText",
+      "text": {
+        "literal": "Session Expired"
+      }
+    },
+    "applicationErrorSignature": {
+      "kind": "pageContainsText",
+      "text": {
+        "literal": "Application Error"
+      }
+    }
+  },
+  "steps": [
+    {
+      "id": "step-1-navigate",
+      "intent": "Open the application entry point",
+      "action": {
+        "kind": "navigate",
+        "path": "/"
+      },
+      "timeoutMs": 5000
+    },
+    {
+      "id": "step-2-fill",
+      "intent": "Fill \"Member ID\"",
+      "action": {
+        "kind": "fill",
+        "targetRef": "target1",
+        "value": {
+          "inputRef": "memberId"
+        }
+      },
+      "postconditionRef": "memberInputMatchesRequest",
+      "timeoutMs": 5000
+    },
+    {
+      "id": "step-3-click",
+      "intent": "Click \"Search\"",
+      "action": {
+        "kind": "click",
+        "targetRef": "target2"
+      },
+      "timeoutMs": 5000
+    },
+    {
+      "id": "step-4-click",
+      "intent": "Open the member found in search results",
+      "action": {
+        "kind": "click",
+        "targetRef": "target3"
+      },
+      "postconditionRef": "memberDetailMatchesRequest",
+      "timeoutMs": 5000,
+      "zeroMatchOutcome": {
+        "code": "MEMBER_NOT_FOUND"
+      }
+    },
+    {
+      "id": "step-5-click",
+      "intent": "Open the member's savings account detail",
+      "action": {
+        "kind": "click",
+        "targetRef": "target4"
+      },
+      "postconditionRef": "savingsContentLoaded",
+      "timeoutMs": 5000,
+      "postconditionRecovery": {
+        "maxAttempts": 3,
+        "delayMs": 800
+      }
+    },
+    {
+      "id": "step-6-extract",
+      "intent": "Extract \"Currency\" into currency",
+      "action": {
+        "kind": "extract",
+        "targetRef": "target5",
+        "outputRef": "currency"
+      },
+      "timeoutMs": 5000
+    },
+    {
+      "id": "step-7-extract",
+      "intent": "Extract \"Balance\" into balance",
+      "action": {
+        "kind": "extract",
+        "targetRef": "target6",
+        "outputRef": "balance"
+      },
+      "timeoutMs": 5000
+    },
+    {
+      "id": "step-8-extract",
+      "intent": "Extract \"Status\" into status",
+      "action": {
+        "kind": "extract",
+        "targetRef": "target7",
+        "outputRef": "status"
+      },
+      "timeoutMs": 5000
+    }
+  ],
+  "blockers": [
+    {
+      "signatureRef": "sessionExpiredSignature",
+      "classification": "intervention",
+      "reasonCode": "SESSION_EXPIRED"
+    },
+    {
+      "signatureRef": "applicationErrorSignature",
+      "classification": "APPLICATION_ERROR",
+      "reasonCode": "APPLICATION_ERROR_ON_SAVINGS"
+    }
+  ],
+  "discoveryProvenance": {
+    "mode": "observed",
+    "note": "Compiled from a live discovery trace. See authorSafetyRules() for authored, honestly-labeled additions (identity checks, the missing-member outcome, structural overrides for two member-specific target names, fault blockers, and a bounded recovery). Those overrides are chosen by click position (2nd click opens the member, 3rd click opens savings), so they assume this goal's click order and would need re-authoring against a differently-shaped trace. v1.2.0 adds one authored, untested-by-discovery fallback strategy to target1 (nearbyText, rank 2) for the legacy app surface's weakly-labelled Member ID field; target1's overall provenance reads 'authored' because of that addition, but its rank-1 strategy (label) is itself fully discovery-observed and unchanged from what compile() produced.",
+    "discoveredAt": "2026-09-15T22:24:48.939Z",
+    "model": "claude-sonnet-5",
+    "runId": "discover-2026-09-15T22-24-34-249Z-1699a953"
+  }
+}

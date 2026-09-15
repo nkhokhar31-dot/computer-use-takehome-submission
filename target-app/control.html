@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Control</title>
+</head>
+<body>
+  <h1>Control</h1>
+  <form id="control-form">
+    <label for="message">Message</label>
+    <input id="message" name="message" type="text" />
+    <button type="submit">Submit</button>
+  </form>
+  <p id="result"></p>
+  <script>
+    document.getElementById('control-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      var value = document.getElementById('message').value;
+      document.getElementById('result').textContent = 'Submitted: ' + value;
+    });
+  </script>
+</body>
+</html>

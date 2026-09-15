@@ -1,0 +1,22 @@
+{"ts":"2026-09-15T22:25:47.615Z","event":"replay_start","capabilityId":"member.balance.read","version":"1.2.0","inputNames":["memberId"]}
+{"ts":"2026-09-15T22:25:47.616Z","event":"step_start","stepId":"step-1-navigate","intent":"Open the application entry point"}
+{"ts":"2026-09-15T22:25:47.721Z","event":"step_result","stepId":"step-1-navigate","outcome":"success"}
+{"ts":"2026-09-15T22:25:47.721Z","event":"step_start","stepId":"step-2-fill","intent":"Fill \"Member ID\""}
+{"ts":"2026-09-15T22:25:47.769Z","event":"step_result","stepId":"step-2-fill","outcome":"success"}
+{"ts":"2026-09-15T22:25:47.769Z","event":"step_start","stepId":"step-3-click","intent":"Click \"Search\""}
+{"ts":"2026-09-15T22:25:48.014Z","event":"step_result","stepId":"step-3-click","outcome":"success"}
+{"ts":"2026-09-15T22:25:48.014Z","event":"step_start","stepId":"step-4-click","intent":"Open the member found in search results"}
+{"ts":"2026-09-15T22:25:48.269Z","event":"intervention_required","interventionId":"intervention-848efa12","runId":"replay-2026-09-15T22-25-46-471Z-94a476b7","capabilityId":"member.balance.read","capabilityVersion":"1.2.0","goal":"Look up the requested member and read their savings account's balance, currency, and status","stepId":"step-4-click","stepIntent":"Open the member found in search results","reasonCode":"SESSION_EXPIRED","reason":"A known blocker (\"SESSION_EXPIRED\") was detected instead of the expected screen.","lastVerifiedCheckpoint":"memberInputMatchesRequest","currentScreen":"http://localhost:3000/member/[REDACTED]","screenshotRef":"/Users/mymacpro/Development/computer-use-takehome-submission/evidence/escalation/replay-2026-09-15T22-25-46-471Z-94a476b7-step-4-click.masked.png","sessionId":"fddb8cb1-c10c-42fe-93d4-c365f014a11c","controlEpoch":1,"requiredAction":"Operate the browser to resolve this, then type \"resume\" (or \"abort\" to cancel).","createdAt":"2026-09-15T22:25:48.269Z"}
+{"ts":"2026-09-15T22:25:48.288Z","event":"human_action","interventionId":"intervention-848efa12","controlEpoch":1,"seq":1,"kind":"click","element":"link"}
+{"ts":"2026-09-15T22:25:48.299Z","event":"human_action","interventionId":"intervention-848efa12","controlEpoch":1,"seq":2,"kind":"navigation","route":"^\\/member\\/[^/]+$"}
+{"ts":"2026-09-15T22:25:48.317Z","event":"handback","stepId":"step-4-click","controlEpoch":2,"humanActionCount":2,"policyBlockedCount":0}
+{"ts":"2026-09-15T22:25:48.317Z","event":"step_result","stepId":"step-4-click","outcome":"success_after_intervention"}
+{"ts":"2026-09-15T22:25:48.317Z","event":"step_start","stepId":"step-5-click","intent":"Open the member's savings account detail"}
+{"ts":"2026-09-15T22:25:48.532Z","event":"step_result","stepId":"step-5-click","outcome":"success"}
+{"ts":"2026-09-15T22:25:48.532Z","event":"step_start","stepId":"step-6-extract","intent":"Extract \"Currency\" into currency"}
+{"ts":"2026-09-15T22:25:48.539Z","event":"step_result","stepId":"step-6-extract","outcome":"success"}
+{"ts":"2026-09-15T22:25:48.539Z","event":"step_start","stepId":"step-7-extract","intent":"Extract \"Balance\" into balance"}
+{"ts":"2026-09-15T22:25:48.543Z","event":"step_result","stepId":"step-7-extract","outcome":"success"}
+{"ts":"2026-09-15T22:25:48.543Z","event":"step_start","stepId":"step-8-extract","intent":"Extract \"Status\" into status"}
+{"ts":"2026-09-15T22:25:48.546Z","event":"step_result","stepId":"step-8-extract","outcome":"success"}
+{"ts":"2026-09-15T22:25:48.546Z","event":"replay_result","outcome":"success","outputKeys":["currency","balance","status"]}

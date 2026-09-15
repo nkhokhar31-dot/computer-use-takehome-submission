@@ -1,0 +1,12 @@
+{"ts":"2026-09-15T22:24:16.075Z","event":"replay_start","capabilityId":"member.balance.read","version":"1.2.0","inputNames":["memberId"]}
+{"ts":"2026-09-15T22:24:16.076Z","event":"step_start","stepId":"step-1-navigate","intent":"Open the application entry point"}
+{"ts":"2026-09-15T22:24:16.141Z","event":"step_result","stepId":"step-1-navigate","outcome":"success"}
+{"ts":"2026-09-15T22:24:16.141Z","event":"step_start","stepId":"step-2-fill","intent":"Fill \"Member ID\""}
+{"ts":"2026-09-15T22:24:16.155Z","event":"step_result","stepId":"step-2-fill","outcome":"success"}
+{"ts":"2026-09-15T22:24:16.156Z","event":"step_start","stepId":"step-3-click","intent":"Click \"Search\""}
+{"ts":"2026-09-15T22:24:16.370Z","event":"step_result","stepId":"step-3-click","outcome":"success"}
+{"ts":"2026-09-15T22:24:16.371Z","event":"step_start","stepId":"step-4-click","intent":"Open the member found in search results"}
+{"ts":"2026-09-15T22:24:16.590Z","event":"step_result","stepId":"step-4-click","outcome":"success"}
+{"ts":"2026-09-15T22:24:16.590Z","event":"step_start","stepId":"step-5-click","intent":"Open the member's savings account detail"}
+{"ts":"2026-09-15T22:24:16.845Z","event":"blocker","stepId":"step-5-click","classification":"APPLICATION_ERROR","reasonCode":"APPLICATION_ERROR_ON_SAVINGS","screenshotRef":"/Users/mymacpro/Development/computer-use-takehome-submission/evidence/escalation/replay-2026-09-15T22-24-15-508Z-f3db2ee6-step-5-click.masked.png"}
+{"ts":"2026-09-15T22:24:16.845Z","event":"step_result","stepId":"step-5-click","outcome":"failure"}

@@ -1,0 +1,18 @@
+{"ts":"2026-09-15T22:24:06.622Z","event":"replay_start","capabilityId":"member.balance.read","version":"1.2.0","inputNames":["memberId"]}
+{"ts":"2026-09-15T22:24:06.623Z","event":"step_start","stepId":"step-1-navigate","intent":"Open the application entry point"}
+{"ts":"2026-09-15T22:24:06.751Z","event":"step_result","stepId":"step-1-navigate","outcome":"success"}
+{"ts":"2026-09-15T22:24:06.751Z","event":"step_start","stepId":"step-2-fill","intent":"Fill \"Member ID\""}
+{"ts":"2026-09-15T22:24:06.793Z","event":"step_result","stepId":"step-2-fill","outcome":"success"}
+{"ts":"2026-09-15T22:24:06.794Z","event":"step_start","stepId":"step-3-click","intent":"Click \"Search\""}
+{"ts":"2026-09-15T22:24:07.047Z","event":"step_result","stepId":"step-3-click","outcome":"success"}
+{"ts":"2026-09-15T22:24:07.047Z","event":"step_start","stepId":"step-4-click","intent":"Open the member found in search results"}
+{"ts":"2026-09-15T22:24:07.286Z","event":"step_result","stepId":"step-4-click","outcome":"success"}
+{"ts":"2026-09-15T22:24:07.287Z","event":"step_start","stepId":"step-5-click","intent":"Open the member's savings account detail"}
+{"ts":"2026-09-15T22:24:07.504Z","event":"step_result","stepId":"step-5-click","outcome":"success"}
+{"ts":"2026-09-15T22:24:07.504Z","event":"step_start","stepId":"step-6-extract","intent":"Extract \"Currency\" into currency"}
+{"ts":"2026-09-15T22:24:07.511Z","event":"step_result","stepId":"step-6-extract","outcome":"success"}
+{"ts":"2026-09-15T22:24:07.511Z","event":"step_start","stepId":"step-7-extract","intent":"Extract \"Balance\" into balance"}
+{"ts":"2026-09-15T22:24:07.515Z","event":"step_result","stepId":"step-7-extract","outcome":"success"}
+{"ts":"2026-09-15T22:24:07.515Z","event":"step_start","stepId":"step-8-extract","intent":"Extract \"Status\" into status"}
+{"ts":"2026-09-15T22:24:07.519Z","event":"step_result","stepId":"step-8-extract","outcome":"success"}
+{"ts":"2026-09-15T22:24:07.520Z","event":"replay_result","outcome":"success","outputKeys":["currency","balance","status"]}
