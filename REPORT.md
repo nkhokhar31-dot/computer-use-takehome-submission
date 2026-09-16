@@ -2,13 +2,23 @@
 
 ## 1. Architecture
 
-A single Node/TypeScript process with four core modules: `discovery.ts` (Anthropic tool-use loop
+A single Node/TypeScript process with five core modules: `discovery.ts` (Anthropic tool-use loop
 and compiler), `replay.ts` (model-free interpreter), `runtime.ts` (ownership, serial dispatch,
-policy) and `browser.ts` (Playwright observation, locators, masking and request gate). `schema.ts`
-defines every serialized shape with Zod; `operator.ts` holds the stdin operator prompt and takeover
-recording. The assignment tests these boundaries rather than deployment, so
-there are no services or queues. Discovery and replay act only through `runtime.ts`, so ownership
-and policy apply equally to model-chosen and artifact-chosen actions.
+policy), `browser.ts` (Playwright observation, locators, masking and request gate) and
+`evidence.ts` (structured logging and redaction). `schema.ts` defines every serialized shape with
+Zod; `operator.ts` holds the stdin operator prompt and takeover recording. The assignment tests
+these boundaries rather than deployment, so there are no services or queues. Discovery and replay
+act only through `runtime.ts`, so ownership and policy apply equally to model-chosen and
+artifact-chosen actions.
+
+**Observability (§3.5).** Every `discover`/`replay` run writes one JSON-lines file to
+`evidence/runs/<runId>.jsonl` via `evidence.ts`'s `EvidenceWriter` - not just what happened but
+why: each replay event carries the step's `intent`, which precondition/postcondition/blocker
+predicate fired, and the outcome; each discovery event carries a closed-vocabulary `intentCode`
+plus the locator strategy that resolved, redacted against every tracked sensitive value before
+it touches disk. A hard failure or an intervention additionally captures a masked screenshot to
+`evidence/escalation/` (§6 covers the masking). `evidence/manifest.json` indexes which committed
+run demonstrates which scenario and how it was verified.
 
 Perception is a filtered ARIA snapshot, and targets are accessible role, name and label strategies.
 The accessibility tree survives non-semantic markup better than CSS selectors and exists on desktop;
