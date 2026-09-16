@@ -66,7 +66,8 @@ npm run replay -- --profile demo \
 
 That's the full loop the assignment asks for: goal → live LLM run → artifact → deterministic
 replay. For a version of this artifact already reviewed and extended with error handling
-(identity checks, business outcomes, fault blockers, bounded recovery — see `REPORT.md` §2), use
+(identity checks, business outcomes, fault blockers, bounded recovery — see `REPORT.md`'s Artifact
+schema section), use
 the curated one shipped in the repo:
 
 ```bash
@@ -173,4 +174,4 @@ npm test          # 93 cases, no API key or external service needed
 - `evidence/` — real discovery and replay runs; see `evidence/manifest.json` for what each one
   shows and how it was verified.
 
-What's deliberately left out, and why: [`REPORT.md` §7](./REPORT.md#7-cuts).
+What's deliberately left out, and why: [`REPORT.md`'s Cuts section](./REPORT.md#7-cuts).
