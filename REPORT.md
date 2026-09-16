@@ -11,14 +11,14 @@ these boundaries rather than deployment, so there are no services or queues. Dis
 act only through `runtime.ts`, so ownership and policy apply equally to model-chosen and
 artifact-chosen actions.
 
-**Observability (§3.5).** Every `discover`/`replay` run writes one JSON-lines file to
+**Observability.** Every `discover`/`replay` run writes one JSON-lines file to
 `evidence/runs/<runId>.jsonl` via `evidence.ts`'s `EvidenceWriter` - not just what happened but
 why: each replay event carries the step's `intent`, which precondition/postcondition/blocker
 predicate fired, and the outcome; each discovery event carries a closed-vocabulary `intentCode`
 plus the locator strategy that resolved, redacted against every tracked sensitive value before
 it touches disk. A hard failure or an intervention additionally captures a masked screenshot to
-`evidence/escalation/` (§6 covers the masking). `evidence/manifest.json` indexes which committed
-run demonstrates which scenario and how it was verified.
+`evidence/escalation/` (the Safety section below covers the masking). `evidence/manifest.json`
+indexes which committed run demonstrates which scenario and how it was verified.
 
 Perception is a filtered ARIA snapshot, and targets are accessible role, name and label strategies.
 The accessibility tree survives non-semantic markup better than CSS selectors and exists on desktop;
@@ -36,7 +36,7 @@ holding ranked locator strategies and `provenance: observed | authored`; reusabl
 ordered `steps` with pre/postconditions, timeouts, `zeroMatchOutcome` and bounded
 `postconditionRecovery`; `blockers` mapping page signatures to classifications; and
 `discoveryProvenance`. Compiled `fill` values are `{inputRef}` references, not literals, so one
-artifact serves any member (the schema still permits `{literal}`; see §7). A target's strategies are
+artifact serves any member (the schema still permits `{literal}`; see Cuts below). A target's strategies are
 tried in their declared rank order: zero matches tries the next, and more than one stops with
 `TARGET_AMBIGUOUS`. Discovery records the first kind that resolves uniquely, probing role and name →
 label → roleContains → nearbyText.
@@ -150,7 +150,7 @@ Deliberately left out, with what I would build next:
 
 - **Risky-action approval.** Refused outright, so writes cannot run. Next: an `approvalRequired`
   step flag that raises an intervention and records the approval.
-- **Risky-term coverage.** `classifyClick`'s word list (§6) is a small, reviewable set, not an
+- **Risky-term coverage.** `classifyClick`'s word list (Safety, above) is a small, reviewable set, not an
   exhaustive or semantic classifier - a synonym outside it (e.g. "remit", "revoke") would not be
   blocked. Next: a per-profile override list, or a model-assisted classification step reviewed like
   any other authored rule rather than trusted blindly.
@@ -177,11 +177,11 @@ Deliberately left out, with what I would build next:
   `DRIVER_ERROR` instead of `INVALID_ARTIFACT`. The schema also accepts `{literal}` fill values, and
   discovery does not reject one proposed by the model, so a literal could be compiled into a generated
   artifact. Next: a load-time linter for references and types, and reject literal fills from discovery.
-- **Multi-tenant reuse and drift.** Design only (§4). There is one `demo` profile, and no tenant,
-  app-version or override fields in the schema. Nothing measures drift. Next: `supportedAppVersions`
-  on the capability, a per-tenant override layer limited to locator strategies, and per-tenant
-  not-found/ambiguous rates.
-- **Frames, desktop and vision.** Design only (§4). Perception is the ARIA snapshot alone, with no
+- **Multi-tenant reuse and drift.** Design only (see Heterogeneity & multi-tenant, above). There is
+  one `demo` profile, and no tenant, app-version or override fields in the schema. Nothing measures
+  drift. Next: `supportedAppVersions` on the capability, a per-tenant override layer limited to
+  locator strategies, and per-tenant not-found/ambiguous rates.
+- **Frames, desktop and vision.** Design only (same section). Perception is the ARIA snapshot alone, with no
   screenshot or coordinate fallback for surfaces without an accessibility tree. Next: a frame selector
   per target, then a platform accessibility driver behind `browser.ts`.
 - **Structural redaction.** Undeclared-value coverage depends on markup. Next: mask page regions known
@@ -194,7 +194,8 @@ Deliberately left out, with what I would build next:
 - **Evidence depth.** No Playwright trace or DOM snapshot. Screenshots are taken only on escalation,
   and events do not record app mode or profile. Next: a redacted trace on failure.
 - **Run orchestration.** One browser session per process, per-step timeouts but no whole-run deadline
-  for replay, and no concurrency. Deliberately not built (see brief §7).
+  for replay, and no concurrency. Deliberately not built - the assignment explicitly discourages
+  building scaling infrastructure before the core is proven.
 - **Other stretch goals.** Only the capability catalog was built. Not attempted: confidence scoring
   and draft→approved gating, multi-run stability, code generation, bounded LLM-assisted fallback, and a
   cross-variant (two-tenant) demonstration with per-variant overrides.
